@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "kerja_baktis",
+  "info": {
+    "singularName": "kerja-bakti",
+    "pluralName": "kerja-baktis",
+    "displayName": "Kerja Bakti"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "photos": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": true
+    },
+    "kegiatan": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::kegiatan.kegiatan",
+      "inversedBy": "kerja_bakti"
+    }
+  }
+}

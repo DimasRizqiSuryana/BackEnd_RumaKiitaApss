@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "document_statuses",
+  "info": {
+    "singularName": "document-status",
+    "pluralName": "document-statuses",
+    "displayName": "Document Status"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "status": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "surat_pengajuans": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::surat-pengajuan.surat-pengajuan",
+      "mappedBy": "document_status"
+    },
+    "aduans": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::aduan.aduan",
+      "mappedBy": "document_status"
+    },
+    "kegiatans": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::kegiatan.kegiatan",
+      "mappedBy": "document_status"
+    },
+    "election_registrations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::election-registration.election-registration",
+      "mappedBy": "document_status"
+    }
+  }
+}

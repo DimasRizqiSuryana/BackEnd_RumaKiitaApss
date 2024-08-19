@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "election_parties",
+  "info": {
+    "singularName": "election-party",
+    "pluralName": "election-parties",
+    "displayName": "Election Party"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "no_urut": {
+      "type": "integer",
+      "required": true,
+      "min": 0
+    },
+    "ketua": {
+      "type": "string",
+      "required": true
+    },
+    "photo_ketua": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "wakil_ketua": {
+      "type": "string",
+      "required": true
+    },
+    "photo_wakil_ketua": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "election": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::election.election",
+      "inversedBy": "election_parties"
+    }
+  }
+}

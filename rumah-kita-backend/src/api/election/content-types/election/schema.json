@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "elections",
+  "info": {
+    "singularName": "election",
+    "pluralName": "elections",
+    "displayName": "Election"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "kegiatan": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::kegiatan.kegiatan",
+      "inversedBy": "election"
+    },
+    "election_parties": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::election-party.election-party",
+      "mappedBy": "election"
+    },
+    "election_registrations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::election-registration.election-registration",
+      "mappedBy": "election"
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "kind": "collectionType",
+  "collectionName": "kegiatans",
+  "info": {
+    "singularName": "kegiatan",
+    "pluralName": "kegiatans",
+    "displayName": "Kegiatan"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "start_date": {
+      "type": "datetime",
+      "required": true
+    },
+    "finish_date": {
+      "type": "datetime",
+      "required": true
+    },
+    "reject_description": {
+      "type": "text"
+    },
+    "attachment": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "kegiatans"
+    },
+    "kategori_kegiatan": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::kategori-kegiatan.kategori-kegiatan",
+      "inversedBy": "kegiatans"
+    },
+    "document_status": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::document-status.document-status",
+      "inversedBy": "kegiatans"
+    },
+    "kerja_bakti": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::kerja-bakti.kerja-bakti",
+      "mappedBy": "kegiatan"
+    },
+    "election": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::election.election",
+      "mappedBy": "kegiatan"
+    }
+  }
+}

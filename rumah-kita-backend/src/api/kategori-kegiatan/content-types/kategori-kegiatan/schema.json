@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "kategori_kegiatans",
+  "info": {
+    "singularName": "kategori-kegiatan",
+    "pluralName": "kategori-kegiatans",
+    "displayName": "Kategori Kegiatan"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "kategori": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "cover": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "kegiatans": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::kegiatan.kegiatan",
+      "mappedBy": "kategori_kegiatan"
+    }
+  }
+}

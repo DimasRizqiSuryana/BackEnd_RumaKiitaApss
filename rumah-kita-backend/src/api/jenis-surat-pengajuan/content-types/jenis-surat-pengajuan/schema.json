@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "jenis_surat_pengajuans",
+  "info": {
+    "singularName": "jenis-surat-pengajuan",
+    "pluralName": "jenis-surat-pengajuans",
+    "displayName": "Jenis Surat Pengajuan"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "jenis": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "surat_pengajuans": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::surat-pengajuan.surat-pengajuan",
+      "mappedBy": "jenis_surat_pengajuan"
+    }
+  }
+}

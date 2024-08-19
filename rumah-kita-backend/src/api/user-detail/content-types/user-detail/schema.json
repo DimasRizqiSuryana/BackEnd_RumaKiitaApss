@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_details",
+  "info": {
+    "singularName": "user-detail",
+    "pluralName": "user-details",
+    "displayName": "User Detail",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fullname": {
+      "type": "string",
+      "required": true
+    },
+    "jenis_kelamin": {
+      "type": "string",
+      "required": true
+    },
+    "rw": {
+      "type": "string",
+      "required": true
+    },
+    "rt": {
+      "type": "string",
+      "required": true
+    },
+    "alamat": {
+      "type": "text",
+      "required": true
+    },
+    "domisili": {
+      "type": "text",
+      "required": true
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "user_detail"
+    }
+  }
+}

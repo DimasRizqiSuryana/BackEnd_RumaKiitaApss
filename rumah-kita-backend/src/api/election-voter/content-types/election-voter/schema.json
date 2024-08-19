@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "election_voters",
+  "info": {
+    "singularName": "election-voter",
+    "pluralName": "election-voters",
+    "displayName": "Election Voter"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "election_registration": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::election-registration.election-registration",
+      "inversedBy": "election_voters"
+    }
+  }
+}

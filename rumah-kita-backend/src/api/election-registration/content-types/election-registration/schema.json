@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "election_registrations",
+  "info": {
+    "singularName": "election-registration",
+    "pluralName": "election-registrations",
+    "displayName": "Election Registration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "reject_description": {
+      "type": "text"
+    },
+    "attachment": {
+      "allowedTypes": [
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "election_registrations"
+    },
+    "election": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::election.election",
+      "inversedBy": "election_registrations"
+    },
+    "document_status": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::document-status.document-status",
+      "inversedBy": "election_registrations"
+    },
+    "election_voters": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::election-voter.election-voter",
+      "mappedBy": "election_registration"
+    }
+  }
+}

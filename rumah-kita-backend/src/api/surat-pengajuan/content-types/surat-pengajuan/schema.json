@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "surat_pengajuans",
+  "info": {
+    "singularName": "surat-pengajuan",
+    "pluralName": "surat-pengajuans",
+    "displayName": "Surat Pengajuan",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fullname": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true
+    },
+    "alamat": {
+      "type": "text",
+      "required": true
+    },
+    "reject_description": {
+      "type": "text"
+    },
+    "documents": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "surat_pengajuans"
+    },
+    "document_status": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::document-status.document-status",
+      "inversedBy": "surat_pengajuans"
+    },
+    "jenis_surat_pengajuan": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::jenis-surat-pengajuan.jenis-surat-pengajuan",
+      "inversedBy": "surat_pengajuans"
+    }
+  }
+}
