@@ -67,6 +67,12 @@
       "relation": "oneToOne",
       "target": "api::election.election",
       "mappedBy": "kegiatan"
+    },
+    "election_registrations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::election-registration.election-registration",
+      "mappedBy": "kegiatan"
     }
   }
 }

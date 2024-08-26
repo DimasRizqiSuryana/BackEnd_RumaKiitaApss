@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../utils/themes.dart';
 import 'base_typography.dart';
+import 'list_item.dart';
 
 /// SuratPengajuanCard
 class SuratPengajuanCard extends StatelessWidget {
@@ -36,24 +37,9 @@ class SuratPengajuanCard extends StatelessWidget {
                 fontWeight: fBold,
               ),
               const SizedBox(height: 8.0),
-              Wrap(
-                spacing: 32.0,
-                runSpacing: 4.0,
-                children: [
-                  BaseTypography.richText(
-                    color: Colors.black87,
-                    children: [
-                      const TextSpan(text: 'Status : '),
-                      TextSpan(
-                        text: status,
-                        style: const TextStyle(
-                          color: cTeal,
-                          fontWeight: fBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              ListItem(
+                label: 'Status',
+                value: status,
               ),
             ],
           ),

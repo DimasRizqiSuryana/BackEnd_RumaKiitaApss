@@ -4,7 +4,8 @@
   "info": {
     "singularName": "election-registration",
     "pluralName": "election-registrations",
-    "displayName": "Election Registration"
+    "displayName": "Election Registration",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -15,11 +16,12 @@
       "type": "text"
     },
     "attachment": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "files"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "users_permissions_user": {
       "type": "relation",
@@ -44,6 +46,12 @@
       "relation": "oneToMany",
       "target": "api::election-voter.election-voter",
       "mappedBy": "election_registration"
+    },
+    "kegiatan": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::kegiatan.kegiatan",
+      "inversedBy": "election_registrations"
     }
   }
 }

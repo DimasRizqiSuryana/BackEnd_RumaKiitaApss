@@ -28,6 +28,15 @@ class ElectionRegistrationCubit extends Cubit<ElectionRegistrationState> {
         _electionVoterApi = electionVoterApi,
         super(const ElectionRegistrationState());
 
+  void kegiatanChanged(int val) {
+    if (_lock) return;
+
+    emit(state.copyWith(
+      kegiatan: IdentifierInput.dirty(value: val),
+      status: FormzSubmissionStatus.initial,
+    ));
+  }
+
   void electionChanged(int val) {
     if (_lock) return;
 
@@ -46,10 +55,10 @@ class ElectionRegistrationCubit extends Cubit<ElectionRegistrationState> {
     ));
   }
 
-  void addVoter(String val) {
+  void addVoter() {
     if (_lock) return;
 
-    final voters = state.voters;
+    final voters = state.voters.toList();
     voters.add(const DefaultInput.pure());
 
     emit(state.copyWith(
@@ -73,7 +82,7 @@ class ElectionRegistrationCubit extends Cubit<ElectionRegistrationState> {
   void removeVoter(int index) {
     if (_lock) return;
 
-    final voters = state.voters;
+    final voters = state.voters.toList();
     voters.removeAt(index);
 
     emit(state.copyWith(
@@ -118,19 +127,19 @@ class ElectionRegistrationCubit extends Cubit<ElectionRegistrationState> {
         );
       }
 
-      for (var i = 0; i < state.voters.length; i++) {
-        var e = state.voters[i];
-
-        if (e.error != null) {
-          return ValidationObject(
-            identifier: 'voter_$i',
-            name: 'Pemilih $i',
-            message: e.error!.errorMessage,
-          );
-        }
-      }
-
       return const ValidationObject();
+    }
+
+    for (var i = 0; i < state.voters.length; i++) {
+      var e = DefaultInput.dirty(value: state.voters[i].value);
+
+      if (e.isNotValid) {
+        return ValidationObject(
+          identifier: 'voter_${i + 1}',
+          name: 'Pemilih ${i + 1}',
+          message: e.error!.errorMessage,
+        );
+      }
     }
 
     return null;
@@ -155,7 +164,16 @@ class ElectionRegistrationCubit extends Cubit<ElectionRegistrationState> {
       validation: _validate(),
     ));
 
-    if (state.isNotValid) {
+    bool isInputInvalid = false;
+
+    for (var i = 0; i < state.voters.length; i++) {
+      if (state.voters[i].isNotValid) {
+        isInputInvalid = true;
+        break;
+      }
+    }
+
+    if (state.isNotValid || isInputInvalid) {
       emit(state.copyWith()); // reset
     } else {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
@@ -166,6 +184,7 @@ class ElectionRegistrationCubit extends Cubit<ElectionRegistrationState> {
       final result = await _electionRegistrationApi.create(
         rd: {
           'users_permissions_user': _appKVS.userId!,
+          'kegiatan': state.kegiatan.value,
           'election': state.election.value,
           'document_status': state.documentStatus.value,
         },

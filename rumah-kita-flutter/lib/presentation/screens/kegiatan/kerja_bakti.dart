@@ -1,17 +1,17 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:path/path.dart' as p;
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../service_locator.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/helpers.dart';
 import '../../../utils/themes.dart';
+import '../../blocs/kegiatan_detail/kegiatan_detail_cubit.dart';
 import '../../widgets/base_appbar.dart';
 import '../../widgets/base_buttons.dart';
-import '../../widgets/base_date_picker.dart';
-import '../../widgets/base_dropdown_menu.dart';
-import '../../widgets/base_text_field.dart';
 import '../../widgets/base_typography.dart';
+import '../../widgets/status_card.dart';
 
 /// KerjaBaktiScreen
 class KerjaBaktiScreen extends StatelessWidget {
@@ -24,9 +24,17 @@ class KerjaBaktiScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _KerjaBaktiScreen(
-      key: key,
-      id: id,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<KegiatanDetailCubit>(
+          lazy: false,
+          create: (context) => sl<KegiatanDetailCubit>(),
+        ),
+      ],
+      child: _KerjaBaktiScreen(
+        key: key,
+        id: id,
+      ),
     );
   }
 }
@@ -44,13 +52,234 @@ class _KerjaBaktiScreen extends StatefulWidget {
 }
 
 class __KerjaBaktiScreenState extends State<_KerjaBaktiScreen> {
-  final TextEditingController _documentStatusController =
-      TextEditingController();
-  final TextEditingController _kategoriKegiatanController =
-      TextEditingController();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  File? _attachment;
+  void _fetch() {
+    BlocProvider.of<KegiatanDetailCubit>(context).dataRequested(widget.id);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fetch();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Widget _inProgressWidget() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _failureWidget(KegiatanDetailState state) {
+    return Column(
+      children: [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BaseTypography(
+                type: 'h3',
+                text: state.error!.label,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16.0),
+              BaseElevatedButton(
+                onPressed: () {
+                  _fetch();
+                },
+                label: 'Refresh',
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _successWidget(KegiatanDetailState data) {
+    var documentStatus = data.data!.attributes.documentStatus!;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        _fetch();
+      },
+      child: ListView(
+        children: [
+          const SizedBox(height: 24.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+            ),
+            child: StatusCard(
+              status: documentStatus.attributes.status,
+              label: documentStatus.attributes.label,
+            ),
+          ),
+          const SizedBox(height: 12.0),
+          const Divider(indent: 24.0, endIndent: 24.0),
+          const SizedBox(height: 12.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+            ),
+            child: BaseTypography(
+              text: data.data!.attributes.title,
+              type: 'h2',
+              fontWeight: fBold,
+            ),
+          ),
+          const SizedBox(height: 24.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+            ),
+            child: BaseTypography(
+              text: data.data!.attributes.description ?? '',
+            ),
+          ),
+          const SizedBox(height: 24.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 24.0,
+            ),
+            child: BaseTypography(
+              text: 'Waktu Kegiatan',
+              fontWeight: fBold,
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+            ),
+            child: Card(
+              clipBehavior: Clip.hardEdge,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 24.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const BaseTypography(
+                      text: 'Mulai',
+                      color: cBlack,
+                      fontWeight: fBold,
+                    ),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_alarm_rounded,
+                        ),
+                        const SizedBox(width: 12.0),
+                        Expanded(
+                          child: BaseTypography(
+                            text: formatedDateTime(DateTime.parse(
+                              data.data!.attributes.startDate,
+                            )),
+                            color: cTeal,
+                            fontWeight: fBold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24.0),
+                    const BaseTypography(
+                      text: 'Selesai',
+                      color: cBlack,
+                      fontWeight: fBold,
+                    ),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_alarm_rounded,
+                        ),
+                        const SizedBox(width: 12.0),
+                        Expanded(
+                          child: BaseTypography(
+                            text: formatedDateTime(DateTime.parse(
+                              data.data!.attributes.finishDate,
+                            )),
+                            color: cTeal,
+                            fontWeight: fBold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const BaseTypography(
+                  text: 'Dokumen Kegiatan',
+                  fontWeight: fBold,
+                ),
+                const SizedBox(height: 8.0),
+                if (data.data!.attributes.attachment != null)
+                  BaseElevatedButton(
+                    onPressed: () async {
+                      var src = baseUrl;
+                      var url =
+                          data.data!.attributes.attachment!.attributes.url;
+                      var provider =
+                          data.data!.attributes.attachment!.attributes.provider;
+                      if (provider == 'local') {
+                        src += url;
+                      } else {
+                        src = url;
+                      }
+
+                      await launchUrl(Uri.parse(src));
+                    },
+                    label: 'Buka Dokumen',
+                    fontSize: fParagraph,
+                    fontWeight: fMedium,
+                    backgroundColor: cOrange,
+                    foregroundColor: cBlack,
+                  )
+              ],
+            ),
+          ),
+          const SizedBox(height: 12.0),
+          const Divider(indent: 24.0, endIndent: 24.0),
+          const SizedBox(height: 12.0),
+          if (data.data!.attributes.kerjaBakti != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+              ),
+              child: BaseElevatedButton(
+                onPressed: () {
+                  context
+                      .push('/kegiatan/kerja-bakti/documentation/${widget.id}');
+                },
+                borderRadius: 64.0,
+                label: 'Lihat Dokumentasi',
+                backgroundColor: cTeal,
+                foregroundColor: cWhite,
+              ),
+            ),
+          const SizedBox(height: 64.0),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,168 +307,18 @@ class __KerjaBaktiScreenState extends State<_KerjaBaktiScreen> {
               ],
             ),
             Expanded(
-              child: ListView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                    ),
-                    child: BaseDropdownMenu<int>.outlined(
-                      controller: _documentStatusController,
-                      onSelected: (val) {},
-                      label: 'Status',
-                      hintText: 'Status',
-                      requestFocusOnTap: true,
-                      dropdownMenuEntries: const [
-                        DropdownMenuEntry(
-                          value: 1,
-                          label: 'Option 1',
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                    ),
-                    child: BaseDropdownMenu<int>.outlined(
-                      controller: _kategoriKegiatanController,
-                      onSelected: (val) {},
-                      label: 'Kategori Kegiatan',
-                      hintText: 'Kategori Kegiatan',
-                      requestFocusOnTap: true,
-                      dropdownMenuEntries: const [
-                        DropdownMenuEntry(
-                          value: 1,
-                          label: 'Option 1',
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                    ),
-                    child: BaseTextField.outlined(
-                      controller: _titleController,
-                      onChanged: (val) {},
-                      label: 'Judul',
-                      labelColor: cBlack,
-                      hintText: 'Judul kegiatan',
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      maxLines: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 24.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                    ),
-                    child: BaseTextField.outlined(
-                      controller: _descriptionController,
-                      onChanged: (val) {},
-                      label: 'Keterangan',
-                      labelColor: cBlack,
-                      hintText: 'Keterangan',
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.done,
-                      maxLines: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 24.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                    ),
-                    child: BaseDatePicker(
-                      onChanged: (val) {
-                        var str = '';
-                        if (val != null) {
-                          str = val.toIso8601String();
-                        }
-                      },
-                      label: 'Mulai Kegiatan',
-                    ),
-                  ),
-                  const SizedBox(height: 24.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                    ),
-                    child: BaseDatePicker(
-                      onChanged: (val) {
-                        var str = '';
-                        if (val != null) {
-                          str = val.toIso8601String();
-                        }
-                      },
-                      label: 'Selesai Kegiatan',
-                    ),
-                  ),
-                  const SizedBox(height: 24.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const BaseTypography(
-                          text: 'Attachment',
-                          fontWeight: fBold,
-                        ),
-                        const SizedBox(height: 8.0),
-                        if (_attachment != null)
-                          Row(
-                            children: [
-                              Expanded(
-                                child: BaseTypography(
-                                  text: p.basename(_attachment!.path),
-                                ),
-                              ),
-                              const SizedBox(width: 12.0),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _attachment = null;
-                                  });
-                                },
-                                icon: const Icon(Icons.close),
-                              ),
-                            ],
-                          ),
-                        const SizedBox(height: 8.0),
-                        Row(
-                          children: [
-                            const Spacer(),
-                            BaseElevatedButton(
-                              onPressed: () async {
-                                FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles();
+              child: BlocBuilder<KegiatanDetailCubit, KegiatanDetailState>(
+                  builder: (context, state) {
+                if (state.status.isLoading) {
+                  return _inProgressWidget();
+                } else if (state.status.isFailure) {
+                  return _failureWidget(state);
+                } else if (state.status.isSuccess) {
+                  return _successWidget(state);
+                }
 
-                                if (result != null && context.mounted) {
-                                  setState(() {
-                                    _attachment =
-                                        File(result.files.single.path!);
-                                  });
-                                }
-                              },
-                              label: 'Upload',
-                              fontSize: fParagraph,
-                              backgroundColor: cOrange,
-                              foregroundColor: cBlack,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 64.0),
-                ],
-              ),
+                return const SizedBox.shrink();
+              }),
             ),
           ],
         ),

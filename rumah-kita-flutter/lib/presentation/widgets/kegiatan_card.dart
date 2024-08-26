@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rumah_kita/presentation/widgets/list_item.dart';
+import 'package:rumah_kita/utils/helpers.dart';
 
 import '../../utils/themes.dart';
 import 'base_typography.dart';
@@ -42,63 +44,19 @@ class KegiatanCard extends StatelessWidget {
                 fontWeight: fBold,
               ),
               const SizedBox(height: 8.0),
-              Wrap(
-                spacing: 32.0,
-                runSpacing: 4.0,
-                children: [
-                  BaseTypography.richText(
-                    color: Colors.black87,
-                    children: [
-                      const TextSpan(text: 'Kategori : '),
-                      TextSpan(
-                        text: kategori,
-                        style: const TextStyle(
-                          color: cTeal,
-                          fontWeight: fBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  BaseTypography.richText(
-                    color: Colors.black87,
-                    children: [
-                      const TextSpan(text: 'Mulai : '),
-                      TextSpan(
-                        text: startDate,
-                        style: const TextStyle(
-                          color: cTeal,
-                          fontWeight: fBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  BaseTypography.richText(
-                    color: Colors.black87,
-                    children: [
-                      const TextSpan(text: 'Selesai : '),
-                      TextSpan(
-                        text: finishDate,
-                        style: const TextStyle(
-                          color: cTeal,
-                          fontWeight: fBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  BaseTypography.richText(
-                    color: Colors.black87,
-                    children: [
-                      const TextSpan(text: 'Status : '),
-                      TextSpan(
-                        text: status,
-                        style: const TextStyle(
-                          color: cTeal,
-                          fontWeight: fBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              ListItem(label: 'Kategori', value: kategori),
+              ListItem(label: 'Status', value: status),
+              ListItem(
+                label: 'Mulai',
+                value: formatedDateTime(DateTime.parse(
+                  startDate,
+                )),
+              ),
+              ListItem(
+                label: 'Selesai',
+                value: formatedDateTime(DateTime.parse(
+                  finishDate,
+                )),
               ),
             ],
           ),

@@ -1007,6 +1007,7 @@ export interface ApiElectionRegistrationElectionRegistration
     singularName: 'election-registration';
     pluralName: 'election-registrations';
     displayName: 'Election Registration';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1033,6 +1034,11 @@ export interface ApiElectionRegistrationElectionRegistration
       'api::election-registration.election-registration',
       'oneToMany',
       'api::election-voter.election-voter'
+    >;
+    kegiatan: Attribute.Relation<
+      'api::election-registration.election-registration',
+      'manyToOne',
+      'api::kegiatan.kegiatan'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1205,6 +1211,11 @@ export interface ApiKegiatanKegiatan extends Schema.CollectionType {
       'api::kegiatan.kegiatan',
       'oneToOne',
       'api::election.election'
+    >;
+    election_registrations: Attribute.Relation<
+      'api::kegiatan.kegiatan',
+      'oneToMany',
+      'api::election-registration.election-registration'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

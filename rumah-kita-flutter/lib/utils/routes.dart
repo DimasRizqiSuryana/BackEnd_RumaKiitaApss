@@ -12,6 +12,7 @@ import '../presentation/screens/inbox/inbox_aduan.dart';
 import '../presentation/screens/inbox/inbox_kegiatan.dart';
 import '../presentation/screens/inbox/inbox_pengajuan_surat.dart';
 import '../presentation/screens/kegiatan/create_kegiatan.dart';
+import '../presentation/screens/kegiatan/election_party.dart';
 import '../presentation/screens/kegiatan/kegiatan.dart';
 import '../presentation/screens/kegiatan/kegiatan_detail.dart';
 import '../presentation/screens/kegiatan/kerja_bakti.dart';
@@ -122,6 +123,12 @@ final router = GoRouter(
     GoRoute(
       path: '/kegiatan/pemilihan/:id',
       builder: (context, state) => PemilihanScreen(
+        id: int.tryParse(state.pathParameters['id']!) ?? 0,
+      ),
+    ),
+    GoRoute(
+      path: '/kegiatan/election-party/:id',
+      builder: (context, state) => ElectionPartyScreen(
         id: int.tryParse(state.pathParameters['id']!) ?? 0,
       ),
     ),

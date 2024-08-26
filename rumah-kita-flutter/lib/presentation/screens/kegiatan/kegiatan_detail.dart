@@ -14,6 +14,7 @@ import '../../widgets/base_date_picker.dart';
 import '../../widgets/base_dropdown_menu.dart';
 import '../../widgets/base_text_field.dart';
 import '../../widgets/base_typography.dart';
+import '../../widgets/status_card.dart';
 
 /// KegiatanDetailScreen
 class KegiatanDetailScreen extends StatelessWidget {
@@ -54,8 +55,6 @@ class _KegiatanDetailScreen extends StatefulWidget {
 }
 
 class __KegiatanDetailScreenState extends State<_KegiatanDetailScreen> {
-  final TextEditingController _documentStatusController =
-      TextEditingController();
   final TextEditingController _kategoriKegiatanController =
       TextEditingController();
   final TextEditingController _titleController = TextEditingController();
@@ -75,7 +74,6 @@ class __KegiatanDetailScreenState extends State<_KegiatanDetailScreen> {
 
   @override
   void dispose() {
-    _documentStatusController.dispose();
     _kategoriKegiatanController.dispose();
     _titleController.dispose();
     _descriptionController.dispose();
@@ -117,6 +115,8 @@ class __KegiatanDetailScreenState extends State<_KegiatanDetailScreen> {
   }
 
   Widget _successWidget(KegiatanDetailState data) {
+    var documentStatus = data.data!.attributes.documentStatus!;
+
     _titleController.text = data.data!.attributes.title;
     _descriptionController.text = data.data!.attributes.description ?? '';
 
@@ -126,30 +126,19 @@ class __KegiatanDetailScreenState extends State<_KegiatanDetailScreen> {
       },
       child: ListView(
         children: [
+          const SizedBox(height: 24.0),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
             ),
-            child: BlocBuilder<BootCubit, BootState>(
-              builder: (context, state) {
-                return BaseDropdownMenu<int>.outlined(
-                  initialSelection: data.data!.attributes.documentStatus!.id,
-                  onSelected: (val) {},
-                  enabled: false,
-                  label: 'Status',
-                  hintText: 'Status',
-                  requestFocusOnTap: true,
-                  dropdownMenuEntries: state.documentStatus.map((e) {
-                    return DropdownMenuEntry(
-                      value: e.id,
-                      label: e.attributes.label,
-                    );
-                  }).toList(),
-                );
-              },
+            child: StatusCard(
+              status: documentStatus.attributes.status,
+              label: documentStatus.attributes.label,
             ),
           ),
-          const SizedBox(height: 24.0),
+          const SizedBox(height: 12.0),
+          const Divider(indent: 24.0, endIndent: 24.0),
+          const SizedBox(height: 12.0),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
@@ -202,9 +191,9 @@ class __KegiatanDetailScreenState extends State<_KegiatanDetailScreen> {
               label: 'Keterangan',
               labelColor: cBlack,
               hintText: 'Keterangan',
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.multiline,
               textInputAction: TextInputAction.done,
-              maxLines: 1,
+              maxLines: null,
             ),
           ),
           const SizedBox(height: 24.0),
@@ -240,7 +229,7 @@ class __KegiatanDetailScreenState extends State<_KegiatanDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const BaseTypography(
-                  text: 'Attachment',
+                  text: 'Dokumen Pengajuan',
                   fontWeight: fBold,
                 ),
                 const SizedBox(height: 8.0),

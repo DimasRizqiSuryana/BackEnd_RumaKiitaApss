@@ -193,11 +193,20 @@ class __KegiatanScreenState extends State<_KegiatanScreen> {
                             ),
                             child: KegiatanCard(
                               onTap: () {
-                                context.push('/kegiatan-detail/${kegiatan.id}');
-                                // if (widget.kategoriKegiatan == 'kerja-bakti') {
-                                //   context.push('/kegiatan/kerja-bakti/1');
-                                // } else {
-                                // }
+                                if (widget.kategoriKegiatan == 'kerja-bakti') {
+                                  context.push(
+                                    '/kegiatan/kerja-bakti/${kegiatan.id}',
+                                  );
+                                } else if (widget.kategoriKegiatan ==
+                                    'pemilihan') {
+                                  context.push(
+                                    '/kegiatan/pemilihan/${kegiatan.id}',
+                                  );
+                                } else {
+                                  context.push(
+                                    '/kegiatan-detail/${kegiatan.id}',
+                                  );
+                                }
                               },
                               kategori: kegiatan.attributes.kategoriKegiatan!
                                   .attributes.label,

@@ -38,11 +38,10 @@ Map<String, dynamic> _$ElectionModelToJson(ElectionModel instance) =>
 ElectionAttributeModel _$ElectionAttributeModelFromJson(
         Map<String, dynamic> json) =>
     ElectionAttributeModel(
-      description: json['description'] as String,
-      electionParty: json['election_party'] == null
+      electionParty: json['election_parties'] == null
           ? null
           : ElectionPartyListModel.fromJson(
-              json['election_party'] as Map<String, dynamic>),
+              json['election_parties'] as Map<String, dynamic>),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       publishedAt: json['publishedAt'] as String,
@@ -51,8 +50,7 @@ ElectionAttributeModel _$ElectionAttributeModelFromJson(
 Map<String, dynamic> _$ElectionAttributeModelToJson(
         ElectionAttributeModel instance) =>
     <String, dynamic>{
-      'description': instance.description,
-      'election_party': instance.electionParty?.toJson(),
+      'election_parties': instance.electionParty?.toJson(),
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'publishedAt': instance.publishedAt,

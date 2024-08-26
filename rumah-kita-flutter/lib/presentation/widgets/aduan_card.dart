@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/helpers.dart';
 import '../../utils/themes.dart';
 import 'base_typography.dart';
+import 'list_item.dart';
 
 /// AduanCard
 class AduanCard extends StatelessWidget {
@@ -40,50 +42,25 @@ class AduanCard extends StatelessWidget {
                 fontWeight: fBold,
               ),
               const SizedBox(height: 8.0),
-              Wrap(
-                spacing: 32.0,
-                runSpacing: 4.0,
-                children: [
-                  BaseTypography.richText(
-                    color: Colors.black87,
-                    children: [
-                      const TextSpan(text: 'Lokasi : '),
-                      TextSpan(
-                        text: location,
-                        style: const TextStyle(
-                          color: cTeal,
-                          fontWeight: fBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  BaseTypography.richText(
-                    color: Colors.black87,
-                    children: [
-                      const TextSpan(text: 'Waktu Kejadian : '),
-                      TextSpan(
-                        text: dateOfIncident,
-                        style: const TextStyle(
-                          color: cTeal,
-                          fontWeight: fBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  BaseTypography.richText(
-                    color: Colors.black87,
-                    children: [
-                      const TextSpan(text: 'Status : '),
-                      TextSpan(
-                        text: status,
-                        style: const TextStyle(
-                          color: cTeal,
-                          fontWeight: fBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              ListItem(
+                labelFlex: 5,
+                valueFlex: 7,
+                label: 'Lokasi',
+                value: location,
+              ),
+              ListItem(
+                labelFlex: 5,
+                valueFlex: 7,
+                label: 'Status',
+                value: status,
+              ),
+              ListItem(
+                labelFlex: 5,
+                valueFlex: 7,
+                label: 'Waktu Kejadian',
+                value: formatedDateTime(DateTime.parse(
+                  dateOfIncident,
+                )),
               ),
             ],
           ),

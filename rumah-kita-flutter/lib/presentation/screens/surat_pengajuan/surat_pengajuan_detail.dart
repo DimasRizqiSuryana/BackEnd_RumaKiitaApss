@@ -13,6 +13,7 @@ import '../../widgets/base_buttons.dart';
 import '../../widgets/base_dropdown_menu.dart';
 import '../../widgets/base_text_field.dart';
 import '../../widgets/base_typography.dart';
+import '../../widgets/status_card.dart';
 
 /// SuratPengajuanDetailScreen
 class SuratPengajuanDetailScreen extends StatelessWidget {
@@ -118,6 +119,8 @@ class __SuratPengajuanDetailScreenState
   }
 
   Widget _successWidget(SuratPengajuanDetailState data) {
+    var documentStatus = data.data!.attributes.documentStatus!;
+
     _fullnameController.text = data.data!.attributes.fullname;
     _emailController.text = data.data!.attributes.email;
     _alamatController.text = data.data!.attributes.alamat;
@@ -128,30 +131,19 @@ class __SuratPengajuanDetailScreenState
       },
       child: ListView(
         children: [
+          const SizedBox(height: 24.0),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
             ),
-            child: BlocBuilder<BootCubit, BootState>(
-              builder: (context, state) {
-                return BaseDropdownMenu<int>.outlined(
-                  initialSelection: data.data!.attributes.documentStatus!.id,
-                  onSelected: (val) {},
-                  enabled: false,
-                  label: 'Status',
-                  hintText: 'Status',
-                  requestFocusOnTap: true,
-                  dropdownMenuEntries: state.documentStatus.map((e) {
-                    return DropdownMenuEntry(
-                      value: e.id,
-                      label: e.attributes.label,
-                    );
-                  }).toList(),
-                );
-              },
+            child: StatusCard(
+              status: documentStatus.attributes.status,
+              label: documentStatus.attributes.label,
             ),
           ),
-          const SizedBox(height: 24.0),
+          const SizedBox(height: 12.0),
+          const Divider(indent: 24.0, endIndent: 24.0),
+          const SizedBox(height: 12.0),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
@@ -236,7 +228,7 @@ class __SuratPengajuanDetailScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const BaseTypography(
-                  text: 'Attachment',
+                  text: 'Dokumen',
                   fontWeight: fBold,
                 ),
                 const SizedBox(height: 8.0),

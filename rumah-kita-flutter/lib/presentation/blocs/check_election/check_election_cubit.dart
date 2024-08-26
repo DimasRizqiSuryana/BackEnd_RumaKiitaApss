@@ -17,7 +17,7 @@ class CheckElectionCubit extends Cubit<CheckElectionState> {
   })  : _electionRegistrationApi = electionRegistrationApi,
         super(const CheckElectionState());
 
-  void dataRequested(int electionId) async {
+  void dataRequested(int kegiatanId) async {
     emit(state.copyWith(
       status: BlocState.loading,
     ));
@@ -27,7 +27,7 @@ class CheckElectionCubit extends Cubit<CheckElectionState> {
       'populate[document_status]': 'document_status',
       'populate[attachment]': 'attachment',
       'populate[election_voters]': 'election_voters',
-      'filters[election][\$eq]': electionId,
+      'filters[kegiatan][\$eq]': kegiatanId,
     };
 
     final result = await _electionRegistrationApi.getAll(qp: qp);

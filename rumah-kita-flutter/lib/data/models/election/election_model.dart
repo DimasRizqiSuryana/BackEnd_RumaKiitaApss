@@ -107,7 +107,7 @@ class ElectionModel extends Equatable {
   fieldRename: FieldRename.snake,
 )
 class ElectionAttributeModel extends Equatable {
-  final String description;
+  @JsonKey(name: 'election_parties')
   final ElectionPartyListModel? electionParty;
 
   @JsonKey(name: 'createdAt')
@@ -120,7 +120,6 @@ class ElectionAttributeModel extends Equatable {
   final String publishedAt;
 
   const ElectionAttributeModel({
-    required this.description,
     this.electionParty,
     required this.createdAt,
     required this.updatedAt,
@@ -129,7 +128,6 @@ class ElectionAttributeModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        description,
         electionParty,
         createdAt,
         updatedAt,

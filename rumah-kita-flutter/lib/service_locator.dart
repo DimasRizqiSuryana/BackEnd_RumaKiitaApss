@@ -11,6 +11,7 @@ import 'presentation/blocs/create_aduan/create_aduan_cubit.dart';
 import 'presentation/blocs/create_kegiatan/create_kegiatan_cubit.dart';
 import 'presentation/blocs/create_surat_pengajuan/create_surat_pengajuan_cubit.dart';
 import 'presentation/blocs/edit_profile/edit_profile_cubit.dart';
+import 'presentation/blocs/election_party/election_party_cubit.dart';
 import 'presentation/blocs/election_registration/election_registration_cubit.dart';
 import 'presentation/blocs/kegiatan/kegiatan_cubit.dart';
 import 'presentation/blocs/kegiatan_detail/kegiatan_detail_cubit.dart';
@@ -75,7 +76,11 @@ void init() {
         userDetailApi: sl(),
       ));
   sl.registerFactory(() => KegiatanCubit(kegiatanApi: sl()));
-  sl.registerFactory(() => KegiatanDetailCubit(kegiatanApi: sl()));
+  sl.registerFactory(() => KegiatanDetailCubit(
+        appKVS: sl(),
+        kegiatanApi: sl(),
+        electionRegistrationApi: sl(),
+      ));
   sl.registerFactory(() => CreateKegiatanCubit(
         appKVS: sl(),
         kegiatanApi: sl(),
@@ -92,6 +97,7 @@ void init() {
         appKVS: sl(),
         suratPengajuanApi: sl(),
       ));
+  sl.registerFactory(() => ElectionPartyCubit(electionPartyApi: sl()));
   sl.registerFactory(() => CheckElectionCubit(electionRegistrationApi: sl()));
   sl.registerFactory(() => ElectionRegistrationCubit(
         appKVS: sl(),

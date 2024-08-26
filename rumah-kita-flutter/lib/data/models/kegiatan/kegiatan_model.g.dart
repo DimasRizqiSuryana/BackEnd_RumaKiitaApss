@@ -52,6 +52,14 @@ KegiatanAttributeModel _$KegiatanAttributeModelFromJson(
           : DocumentStatusModel.fromJson(
               nestedReader(json, 'document_status/data')
                   as Map<String, dynamic>),
+      kerjaBakti: nestedReader(json, 'kerja_bakti/data') == null
+          ? null
+          : KerjaBaktiModel.fromJson(
+              nestedReader(json, 'kerja_bakti/data') as Map<String, dynamic>),
+      election: nestedReader(json, 'election/data') == null
+          ? null
+          : ElectionModel.fromJson(
+              nestedReader(json, 'election/data') as Map<String, dynamic>),
       title: json['title'] as String,
       description: json['description'] as String?,
       startDate: json['start_date'] as String,
@@ -72,6 +80,8 @@ Map<String, dynamic> _$KegiatanAttributeModelToJson(
       'users_permissions_user/data': instance.user?.toJson(),
       'kategori_kegiatan/data': instance.kategoriKegiatan?.toJson(),
       'document_status/data': instance.documentStatus?.toJson(),
+      'kerja_bakti/data': instance.kerjaBakti?.toJson(),
+      'election/data': instance.election?.toJson(),
       'title': instance.title,
       'description': instance.description,
       'start_date': instance.startDate,

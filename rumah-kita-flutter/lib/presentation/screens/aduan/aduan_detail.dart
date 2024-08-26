@@ -11,9 +11,9 @@ import '../../blocs/boot/boot_cubit.dart';
 import '../../widgets/base_appbar.dart';
 import '../../widgets/base_buttons.dart';
 import '../../widgets/base_date_picker.dart';
-import '../../widgets/base_dropdown_menu.dart';
 import '../../widgets/base_text_field.dart';
 import '../../widgets/base_typography.dart';
+import '../../widgets/status_card.dart';
 
 /// AduanDetailScreen
 class AduanDetailScreen extends StatelessWidget {
@@ -113,6 +113,8 @@ class __AduanDetailScreenState extends State<_AduanDetailScreen> {
   }
 
   Widget _successWidget(AduanDetailState data) {
+    var documentStatus = data.data!.attributes.documentStatus!;
+
     _titleController.text = data.data!.attributes.title;
     _descriptionController.text = data.data!.attributes.description;
     _locationController.text = data.data!.attributes.location;
@@ -123,30 +125,19 @@ class __AduanDetailScreenState extends State<_AduanDetailScreen> {
       },
       child: ListView(
         children: [
+          const SizedBox(height: 24.0),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
             ),
-            child: BlocBuilder<BootCubit, BootState>(
-              builder: (context, state) {
-                return BaseDropdownMenu<int>.outlined(
-                  initialSelection: data.data!.attributes.documentStatus!.id,
-                  onSelected: (val) {},
-                  enabled: false,
-                  label: 'Status',
-                  hintText: 'Status',
-                  requestFocusOnTap: true,
-                  dropdownMenuEntries: state.documentStatus.map((e) {
-                    return DropdownMenuEntry(
-                      value: e.id,
-                      label: e.attributes.label,
-                    );
-                  }).toList(),
-                );
-              },
+            child: StatusCard(
+              status: documentStatus.attributes.status,
+              label: documentStatus.attributes.label,
             ),
           ),
-          const SizedBox(height: 24.0),
+          const SizedBox(height: 12.0),
+          const Divider(indent: 24.0, endIndent: 24.0),
+          const SizedBox(height: 12.0),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
@@ -175,9 +166,9 @@ class __AduanDetailScreenState extends State<_AduanDetailScreen> {
               label: 'Keterangan',
               labelColor: cBlack,
               hintText: 'Keterangan',
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
-              maxLines: 1,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              maxLines: null,
             ),
           ),
           const SizedBox(height: 24.0),
@@ -192,9 +183,9 @@ class __AduanDetailScreenState extends State<_AduanDetailScreen> {
               label: 'Lokasi',
               labelColor: cBlack,
               hintText: 'Lokasi',
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.done,
-              maxLines: 1,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              maxLines: null,
             ),
           ),
           const SizedBox(height: 24.0),
@@ -219,7 +210,7 @@ class __AduanDetailScreenState extends State<_AduanDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const BaseTypography(
-                  text: 'Attachment',
+                  text: 'Dokumen Aduan',
                   fontWeight: fBold,
                 ),
                 const SizedBox(height: 8.0),
@@ -273,7 +264,7 @@ class __AduanDetailScreenState extends State<_AduanDetailScreen> {
               ],
               middle: const [
                 BaseTypography(
-                  text: 'Detail Kegiatan',
+                  text: 'Detail Aduan',
                   type: 'h3',
                   fontWeight: fBold,
                 ),

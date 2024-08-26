@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rumah_kita/data/models/election/election_model.dart';
+import 'package:rumah_kita/data/models/kerja_bakti/kerja_bakti_model.dart';
 
 import '../../../../core/base/base.dart';
 import '../../../../utils/logger.dart';
@@ -120,6 +122,12 @@ class KegiatanAttributeModel extends Equatable {
   @NestedJsonKey(name: 'document_status/data')
   final DocumentStatusModel? documentStatus;
 
+  @NestedJsonKey(name: 'kerja_bakti/data')
+  final KerjaBaktiModel? kerjaBakti;
+
+  @NestedJsonKey(name: 'election/data')
+  final ElectionModel? election;
+
   final String title;
   final String? description;
   final String startDate;
@@ -142,6 +150,8 @@ class KegiatanAttributeModel extends Equatable {
     this.user,
     this.kategoriKegiatan,
     this.documentStatus,
+    this.kerjaBakti,
+    this.election,
     required this.title,
     this.description,
     required this.startDate,
@@ -158,6 +168,8 @@ class KegiatanAttributeModel extends Equatable {
         user,
         kategoriKegiatan,
         documentStatus,
+        kerjaBakti,
+        election,
         title,
         description,
         startDate,

@@ -130,7 +130,7 @@ class ElectionRegistrationApi {
         ),
       );
 
-      final model = ElectionRegistrationModel.fromJson(res.data);
+      final model = ElectionRegistrationModel.fromJson(res.data['data']);
 
       return Right(model.id);
     } on DioException catch (e, stacktrace) {

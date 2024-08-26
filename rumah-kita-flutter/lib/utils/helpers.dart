@@ -51,5 +51,5 @@ Future<DateTime?> showDateAndTimePicker({
 }
 
 String formatedDateTime(DateTime date) {
-  return "${DateFormat.EEEE().format(date)}, ${DateFormat.yMd().format(date)}";
+  return "${DateFormat.EEEE().format(date)}, ${DateFormat.yMd().format(date)} ${DateFormat.Hm().format(date)}";
 }

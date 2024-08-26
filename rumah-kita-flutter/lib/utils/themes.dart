@@ -10,6 +10,7 @@ const Color cBlack = Colors.black87;
 const Color cGrey = Colors.grey;
 const Color cLightYellow = Color.fromRGBO(255, 245, 157, 1);
 const Color cOrange = Colors.orange;
+const Color cLightGreen = Colors.lightGreen;
 const Color cGreen = Colors.green;
 const Color cLightRed = Color.fromRGBO(255, 205, 210, 1);
 const Color cRed = Colors.red;
@@ -24,8 +25,8 @@ const double fHeadline1 = 32.0;
 const double fHeadline2 = 24.0;
 const double fHeadline3 = 20.0;
 const double fParagraph = 16.0;
-const double fLabel = 12.0;
-const double fSmall = 10.0;
+const double fLabel = 14.0;
+const double fSmall = 12.0;
 
 // Fontweight
 const FontWeight fLight = FontWeight.w300;
