@@ -45,6 +45,10 @@ UserDetailAttributeModel _$UserDetailAttributeModelFromJson(
       rt: json['rt'] as String,
       alamat: json['alamat'] as String,
       domisili: json['domisili'] as String,
+      photo: nestedReader(json, 'photo/data') == null
+          ? null
+          : MediaModel.fromJson(
+              nestedReader(json, 'photo/data') as Map<String, dynamic>),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       publishedAt: json['publishedAt'] as String,
@@ -59,6 +63,7 @@ Map<String, dynamic> _$UserDetailAttributeModelToJson(
       'rt': instance.rt,
       'alamat': instance.alamat,
       'domisili': instance.domisili,
+      'photo/data': instance.photo?.toJson(),
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'publishedAt': instance.publishedAt,

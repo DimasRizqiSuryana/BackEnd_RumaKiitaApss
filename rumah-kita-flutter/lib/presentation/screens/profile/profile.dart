@@ -33,6 +33,19 @@ class _ProfileScreen extends StatefulWidget {
 }
 
 class __ProfileScreenState extends State<_ProfileScreen> {
+  FileMetadata? _photo;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final user = BlocProvider.of<AuthBloc>(context).state.user!;
+
+    if (user.detail!.photo != null) {
+      _photo = user.detail!.photo!.toFileMetadata();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,11 +60,8 @@ class __ProfileScreenState extends State<_ProfileScreen> {
             ),
             child: Column(
               children: [
-                const Avatar(
-                  avatar: FileMetadata.remote(
-                    source:
-                        'https://avatars.githubusercontent.com/u/9919?s=200&v=4',
-                  ),
+                Avatar(
+                  avatar: _photo,
                   size: 96.0,
                 ),
                 const SizedBox(height: 24.0),

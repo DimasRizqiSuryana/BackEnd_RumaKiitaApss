@@ -41,6 +41,9 @@ MeDetailModel _$MeDetailModelFromJson(Map<String, dynamic> json) =>
       rt: json['rt'] as String,
       alamat: json['alamat'] as String,
       domisili: json['domisili'] as String,
+      photo: json['photo'] == null
+          ? null
+          : MeMediaModel.fromJson(json['photo'] as Map<String, dynamic>),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       publishedAt: json['publishedAt'] as String,
@@ -55,7 +58,35 @@ Map<String, dynamic> _$MeDetailModelToJson(MeDetailModel instance) =>
       'rt': instance.rt,
       'alamat': instance.alamat,
       'domisili': instance.domisili,
+      'photo': instance.photo?.toJson(),
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'publishedAt': instance.publishedAt,
+    };
+
+MeMediaModel _$MeMediaModelFromJson(Map<String, dynamic> json) => MeMediaModel(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String,
+      hash: json['hash'] as String,
+      ext: json['ext'] as String,
+      mime: json['mime'] as String,
+      size: (json['size'] as num).toDouble(),
+      url: json['url'] as String,
+      provider: json['provider'] as String,
+      createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String,
+    );
+
+Map<String, dynamic> _$MeMediaModelToJson(MeMediaModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'hash': instance.hash,
+      'ext': instance.ext,
+      'mime': instance.mime,
+      'size': instance.size,
+      'url': instance.url,
+      'provider': instance.provider,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };

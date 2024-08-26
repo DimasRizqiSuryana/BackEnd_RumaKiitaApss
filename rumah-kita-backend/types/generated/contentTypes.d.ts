@@ -1344,6 +1344,7 @@ export interface ApiUserDetailUserDetail extends Schema.CollectionType {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+    photo: Attribute.Media<'images'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

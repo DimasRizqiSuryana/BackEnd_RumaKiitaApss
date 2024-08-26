@@ -29,7 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     if (_appKVS.jwtToken.isNotEmpty) {
       final result = await _authApi.me(qp: {
-        'populate[0]': 'user_detail',
+        'populate[user_detail][populate][0]': 'photo',
       });
 
       result.fold(

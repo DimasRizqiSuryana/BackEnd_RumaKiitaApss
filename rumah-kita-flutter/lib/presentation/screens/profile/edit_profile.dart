@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -8,6 +11,7 @@ import '../../../utils/constants.dart';
 import '../../../utils/themes.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/edit_profile/edit_profile_cubit.dart';
+import '../../blocs/edit_profile_picture/edit_profile_picture_cubit.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/base_appbar.dart';
 import '../../widgets/base_buttons.dart';
@@ -30,6 +34,10 @@ class EditProfileScreen extends StatelessWidget {
         BlocProvider<EditProfileCubit>(
           lazy: false,
           create: (context) => sl<EditProfileCubit>(),
+        ),
+        BlocProvider<EditProfilePictureCubit>(
+          lazy: false,
+          create: (context) => sl<EditProfilePictureCubit>(),
         )
       ],
       child: _EditProfileScreen(key: key),
@@ -54,6 +62,7 @@ class __EditProfileScreenState extends State<_EditProfileScreen> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _domisiliController = TextEditingController();
   JenisKelamin _jenisKelamin = JenisKelamin.none;
+  FileMetadata? _photo;
 
   @override
   void initState() {
@@ -67,6 +76,10 @@ class __EditProfileScreenState extends State<_EditProfileScreen> {
     _addressController.text = user.detail!.alamat;
     _domisiliController.text = user.detail!.domisili;
     _jenisKelamin = user.detail!.jenisKelamin.toJenisKelamin();
+
+    if (user.detail!.photo != null) {
+      _photo = user.detail!.photo!.toFileMetadata();
+    }
 
     BlocProvider.of<EditProfileCubit>(context)
         .fullnameChanged(user.detail!.fullname);
@@ -90,6 +103,38 @@ class __EditProfileScreenState extends State<_EditProfileScreen> {
       child: Scaffold(
         body: MultiBlocListener(
           listeners: [
+            BlocListener<EditProfilePictureCubit, EditProfilePictureState>(
+              listener: (context, state) {
+                if (state.validation != null) {
+                  showInfoDialog(
+                    context: context,
+                    type: 'warning',
+                    title: state.validation!.name,
+                    body: state.validation!.message,
+                  );
+                } else {
+                  if (state.status.isSuccess) {
+                    BlocProvider.of<AuthBloc>(context)
+                        .add(const AuthStatusChanged(redirect: false));
+                    showSnackBar(
+                      context: context,
+                      content: const BaseTypography(
+                        text: 'Foto profile berhasil diubah',
+                        fontWeight: fLight,
+                      ),
+                    );
+                  } else if (state.status.isFailure) {
+                    showSnackBar(
+                      context: context,
+                      content: BaseTypography(
+                        text: state.error!.message,
+                        fontWeight: fLight,
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
             BlocListener<EditProfileCubit, EditProfileState>(
               listener: (context, state) {
                 if (state.validation != null) {
@@ -156,28 +201,48 @@ class __EditProfileScreenState extends State<_EditProfileScreen> {
                   ),
                   child: Column(
                     children: [
-                      const Avatar(
-                        avatar: FileMetadata.remote(
-                          source:
-                              'https://avatars.githubusercontent.com/u/9919?s=200&v=4',
-                        ),
+                      Avatar(
+                        avatar: _photo,
                         size: 96.0,
                       ),
                       const SizedBox(height: 24.0),
-                      const BaseTypography(
-                        text: 'Dimas Rizky Suryana',
-                        type: 'h2',
-                        color: cWhite,
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          return BaseTypography(
+                            text: state.user!.detail!.fullname,
+                            type: 'h2',
+                            color: cWhite,
+                          );
+                        },
                       ),
                       const SizedBox(height: 8.0),
-                      const BaseTypography(
-                        text: 'RT/RW: 001/002',
-                        color: cWhite,
-                        fontWeight: fLight,
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          return BaseTypography(
+                            text:
+                                'RT/RW: ${state.user!.detail!.rt}/${state.user!.detail!.rw}',
+                            color: cWhite,
+                            fontWeight: fLight,
+                          );
+                        },
                       ),
                       const SizedBox(height: 24.0),
                       BaseElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          FilePickerResult? result =
+                              await FilePicker.platform.pickFiles(
+                            type: FileType.image,
+                          );
+
+                          if (result != null && context.mounted) {
+                            var f = File(result.files.single.path!);
+                            setState(() {
+                              _photo = FileMetadata.local(source: f.path);
+                            });
+                            BlocProvider.of<EditProfilePictureCubit>(context)
+                                .photoChanged(f);
+                          }
+                        },
                         padding: const EdgeInsets.symmetric(
                           vertical: 0.0,
                           horizontal: 16.0,

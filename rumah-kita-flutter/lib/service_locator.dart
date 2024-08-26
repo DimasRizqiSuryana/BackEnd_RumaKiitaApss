@@ -11,6 +11,7 @@ import 'presentation/blocs/create_aduan/create_aduan_cubit.dart';
 import 'presentation/blocs/create_kegiatan/create_kegiatan_cubit.dart';
 import 'presentation/blocs/create_surat_pengajuan/create_surat_pengajuan_cubit.dart';
 import 'presentation/blocs/edit_profile/edit_profile_cubit.dart';
+import 'presentation/blocs/edit_profile_picture/edit_profile_picture_cubit.dart';
 import 'presentation/blocs/election_party/election_party_cubit.dart';
 import 'presentation/blocs/election_registration/election_registration_cubit.dart';
 import 'presentation/blocs/kegiatan/kegiatan_cubit.dart';
@@ -73,6 +74,10 @@ void init() {
   sl.registerFactory(() => EditProfileCubit(
         appKVS: sl(),
         userApi: sl(),
+        userDetailApi: sl(),
+      ));
+  sl.registerFactory(() => EditProfilePictureCubit(
+        appKVS: sl(),
         userDetailApi: sl(),
       ));
   sl.registerFactory(() => KegiatanCubit(kegiatanApi: sl()));

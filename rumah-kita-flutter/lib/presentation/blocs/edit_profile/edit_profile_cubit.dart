@@ -16,11 +16,11 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   final UserDetailApi _userDetailApi;
   bool _lock = false;
 
-  EditProfileCubit(
-      {required AppKVS appKVS,
-      required UserApi userApi,
-      required UserDetailApi userDetailApi})
-      : _appKVS = appKVS,
+  EditProfileCubit({
+    required AppKVS appKVS,
+    required UserApi userApi,
+    required UserDetailApi userDetailApi,
+  })  : _appKVS = appKVS,
         _userApi = userApi,
         _userDetailApi = userDetailApi,
         super(const EditProfileState());

@@ -3,6 +3,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../../../core/base/base.dart';
 import '../../../../utils/logger.dart';
+import '../../../utils/extensions.dart';
+import '../media/media_model.dart';
 import '../utils.dart';
 
 part 'user_detail_model.g.dart';
@@ -115,6 +117,9 @@ class UserDetailAttributeModel extends Equatable {
   final String alamat;
   final String domisili;
 
+  @NestedJsonKey(name: 'photo/data')
+  final MediaModel? photo;
+
   @JsonKey(name: 'createdAt')
   final String createdAt;
 
@@ -131,6 +136,7 @@ class UserDetailAttributeModel extends Equatable {
     required this.rt,
     required this.alamat,
     required this.domisili,
+    this.photo,
     required this.createdAt,
     required this.updatedAt,
     required this.publishedAt,
@@ -144,6 +150,7 @@ class UserDetailAttributeModel extends Equatable {
         rt,
         alamat,
         domisili,
+        photo,
         createdAt,
         updatedAt,
         publishedAt,

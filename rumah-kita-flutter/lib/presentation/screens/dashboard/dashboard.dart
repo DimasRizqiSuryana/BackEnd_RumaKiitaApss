@@ -133,6 +133,19 @@ class _DashboardScreen extends StatefulWidget {
 }
 
 class __DashboardScreenState extends State<_DashboardScreen> {
+  FileMetadata? _photo;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final user = BlocProvider.of<AuthBloc>(context).state.user!;
+
+    if (user.detail!.photo != null) {
+      _photo = user.detail!.photo!.toFileMetadata();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -151,6 +164,7 @@ class __DashboardScreenState extends State<_DashboardScreen> {
                   builder: (context, state) {
                     return ProfileBanner(
                       fullname: state.user!.detail!.fullname,
+                      avatar: _photo,
                       onNotif: () {},
                     );
                   },

@@ -41,6 +41,13 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "user_detail"
+    },
+    "photo": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

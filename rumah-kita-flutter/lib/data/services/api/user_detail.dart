@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:path/path.dart' as p;
 
 import '../../../core/base/base.dart';
 import '../../../utils/dio_client.dart';
@@ -56,11 +60,30 @@ class UserDetailApi {
   Future<Either<Exception, bool>> update(
     int userDetailId, {
     Map<String, dynamic>? rd,
+    File? photo,
   }) async {
     try {
+      final formData = FormData();
+
+      formData.fields.add(MapEntry('data', jsonEncode(rd)));
+      if (photo != null) {
+        formData.files.add(
+          MapEntry(
+            'files.photo',
+            MultipartFile.fromBytes(
+              photo.readAsBytesSync(),
+              filename: p.basename(photo.path),
+            ),
+          ),
+        );
+      }
+
       final _ = await _dioClient.withToken.put(
         '/api/user-details/$userDetailId',
-        data: rd,
+        data: formData,
+        options: Options(
+          contentType: Headers.multipartFormDataContentType,
+        ),
       );
 
       return const Right(true);
