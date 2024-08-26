@@ -227,7 +227,7 @@ Future<bool> showActionStrictConfirmDialog({
 /// Pre-configured showDialog without an action
 ///
 /// `type` variants : `info`, `warning`, `error`
-Future<void> showInfoDialog({
+Future<bool?> showInfoDialog({
   required BuildContext context,
   required String type,
   required String title,
@@ -246,12 +246,12 @@ Future<void> showInfoDialog({
     }
   }
 
-  showDialog<void>(
+  return showDialog<bool>(
     context: context,
     builder: (BuildContext context) {
       return BaseDialog.confirm(
         onConfirm: () {
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         },
         children: [
           Center(

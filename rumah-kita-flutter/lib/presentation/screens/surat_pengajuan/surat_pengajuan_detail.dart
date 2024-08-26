@@ -142,6 +142,20 @@ class __SuratPengajuanDetailScreenState
             ),
           ),
           const SizedBox(height: 12.0),
+          if (documentStatus.attributes.status == 'rejected' &&
+              data.data!.attributes.rejectDescription != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+              ),
+              child: BaseTypography(
+                text: data.data!.attributes.rejectDescription!,
+                type: 'label',
+                color: cRed,
+                fontStyle: fItalic,
+              ),
+            ),
+          const SizedBox(height: 12.0),
           const Divider(indent: 24.0, endIndent: 24.0),
           const SizedBox(height: 12.0),
           Padding(

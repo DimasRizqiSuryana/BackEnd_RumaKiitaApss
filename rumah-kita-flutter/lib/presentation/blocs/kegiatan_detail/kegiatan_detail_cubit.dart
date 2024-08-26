@@ -25,10 +25,19 @@ class KegiatanDetailCubit extends Cubit<KegiatanDetailState> {
         _electionRegistrationApi = electionRegistrationApi,
         super(const KegiatanDetailState());
 
-  void dataRequested(int id) async {
-    emit(state.copyWith(
-      status: BlocState.loading,
-    ));
+  void dataRequested(
+    int id, {
+    bool fullRefresh = false,
+  }) async {
+    if (fullRefresh) {
+      emit(const KegiatanDetailState().copyWith(
+        status: BlocState.loading,
+      ));
+    } else {
+      emit(state.copyWith(
+        status: BlocState.loading,
+      ));
+    }
 
     ErrorObject? error;
     KegiatanModel? data;

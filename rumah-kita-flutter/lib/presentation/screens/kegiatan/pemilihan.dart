@@ -11,6 +11,7 @@ import '../../../utils/themes.dart';
 import '../../blocs/boot/boot_cubit.dart';
 import '../../blocs/election_registration/election_registration_cubit.dart';
 import '../../blocs/kegiatan_detail/kegiatan_detail_cubit.dart';
+import '../../blocs/signal/signal_cubit.dart';
 import '../../widgets/base_appbar.dart';
 import '../../widgets/base_bottom_sheet.dart';
 import '../../widgets/base_buttons.dart';
@@ -59,8 +60,13 @@ class _PemilihanScreen extends StatefulWidget {
 }
 
 class __PemilihanScreenState extends State<_PemilihanScreen> {
-  void _fetch() {
-    BlocProvider.of<KegiatanDetailCubit>(context).dataRequested(widget.id);
+  void _fetch({
+    bool fullRefresh = false,
+  }) {
+    BlocProvider.of<KegiatanDetailCubit>(context).dataRequested(
+      widget.id,
+      fullRefresh: fullRefresh,
+    );
   }
 
   @override
@@ -121,7 +127,7 @@ class __PemilihanScreenState extends State<_PemilihanScreen> {
               const SizedBox(height: 16.0),
               BaseElevatedButton(
                 onPressed: () {
-                  _fetch();
+                  _fetch(fullRefresh: true);
                 },
                 label: 'Refresh',
               )
@@ -213,7 +219,7 @@ class __PemilihanScreenState extends State<_PemilihanScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        _fetch();
+        _fetch(fullRefresh: true);
       },
       child: ListView(
         children: [
@@ -555,42 +561,60 @@ class __PemilihanScreenState extends State<_PemilihanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            RumahKitaAppBar(
-              left: [
-                IconButton(
-                  onPressed: () {
-                    context.pop();
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back,
-                  ),
-                )
-              ],
-              middle: const [
-                BaseTypography(
-                  text: 'Pemilihan RT',
-                  type: 'h3',
-                  fontWeight: fBold,
-                ),
-              ],
-            ),
-            Expanded(
-              child: BlocBuilder<KegiatanDetailCubit, KegiatanDetailState>(
-                  builder: (context, state) {
-                if (state.status.isLoading) {
-                  return _inProgressWidget();
-                } else if (state.status.isFailure) {
-                  return _failureWidget(state);
-                } else if (state.status.isSuccess) {
-                  return _successWidget(state);
-                }
-
-                return const SizedBox.shrink();
-              }),
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<SignalCubit, SignalState>(
+              listenWhen: (_, current) {
+                return current.signal.isElectionRegistration;
+              },
+              listener: (context, state) {
+                _fetch();
+              },
             ),
           ],
+          child: Column(
+            children: [
+              RumahKitaAppBar(
+                left: [
+                  IconButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
+                    ),
+                  )
+                ],
+                middle: const [
+                  BaseTypography(
+                    text: 'Pemilihan RT',
+                    type: 'h3',
+                    fontWeight: fBold,
+                  ),
+                ],
+              ),
+              Expanded(
+                child: BlocBuilder<KegiatanDetailCubit, KegiatanDetailState>(
+                    builder: (context, state) {
+                  if (state.status.isLoading) {
+                    if (state.data != null) {
+                      print('Data exist------------------');
+                      print(state.data);
+                      return _successWidget(state);
+                    }
+
+                    return _inProgressWidget();
+                  } else if (state.status.isFailure) {
+                    return _failureWidget(state);
+                  } else if (state.status.isSuccess) {
+                    return _successWidget(state);
+                  }
+
+                  return const SizedBox.shrink();
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -685,7 +709,7 @@ class __ElectionRegistrationFormState extends State<_ElectionRegistrationForm> {
       child: MultiBlocListener(
         listeners: [
           BlocListener<ElectionRegistrationCubit, ElectionRegistrationState>(
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state.validation != null) {
                 showInfoDialog(
                   context: context,
@@ -696,12 +720,23 @@ class __ElectionRegistrationFormState extends State<_ElectionRegistrationForm> {
               } else {
                 if (state.status.isSuccess) {
                   _resetInputs();
-                  showInfoDialog(
+                  final res = await showInfoDialog(
                     context: context,
                     type: 'info',
                     title: 'Berhasil',
                     body: 'Berhasil registrasi',
                   );
+
+                  if (context.mounted) {
+                    BlocProvider.of<SignalCubit>(context)
+                        .send(Signal.electionRegistration);
+
+                    if (res != null) {
+                      context.pop();
+                    } else if (res == null) {
+                      context.pop();
+                    }
+                  }
                 } else if (state.status.isFailure) {
                   showSnackBar(
                     context: context,
@@ -737,7 +772,8 @@ class __ElectionRegistrationFormState extends State<_ElectionRegistrationForm> {
                       horizontal: 24.0,
                     ),
                     child: BaseTypography(
-                      text: '(maksimal 3 pemilih)',
+                      text:
+                          '(maksimal 3 pemilih dan tidak dapat mengubah data yang telah dikirim)',
                       type: 'label',
                       fontStyle: fItalic,
                     ),
